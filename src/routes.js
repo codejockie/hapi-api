@@ -1,6 +1,6 @@
 const Boom = require('boom')
 
-const { Article } = require('./models')
+const { Article, Comment } = require('./models')
 
 exports.configureRoutes = (server) => {
   // server.route accepts an object or an array
@@ -18,7 +18,9 @@ exports.configureRoutes = (server) => {
       const article = await Article.findById(request.params.id)
       if (article === null) return Boom.notFound()
 
-      return article
+      const comments = await article.getComments()
+
+      return { ...article.get(), comments }
     }
   }, {
     method: 'POST',
@@ -45,6 +47,24 @@ exports.configureRoutes = (server) => {
       const article = await Article.find(request.params.id)
 
       return article.destroy()
+    }
+  }, {
+    method: 'POST',
+    path: '/articles/{id}/comments',
+    handler: async (request) => {
+      const article = await Article.find(request.params.id)
+  
+      return article.createComment(request.payload.comment)
+    }
+  }, {
+    method: 'DELETE',
+    path: '/articles/{articleId}/comments/{id}',
+    handler: async (request) => {
+      const { id, articleId } = request.params
+      // You can pass options to findById as a second argument
+      const comment = await Comment.find(id, { where: { articleId } })
+  
+      return comment.destroy()
     }
   }])
 }
