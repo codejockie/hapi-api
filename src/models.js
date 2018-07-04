@@ -21,9 +21,21 @@ const Article = sequelize.define('article', {
   body: Sequelize.TEXT
 })
 
-// Create table
+const Comment = sequelize.define('comment', {
+  commenter: Sequelize.STRING,
+  body: Sequelize.TEXT
+})
+
+// These associations add an articleId foreign key to our comments table
+// They add helpful methods like article.getComments() and article.createComment()
+Article.hasMany(Comment)
+Comment.belongsTo(Article)
+
+// Create tables
 Article.sync()
+Comment.sync()
 
 module.exports = {
-  Article
+  Article,
+  Comment
 }
