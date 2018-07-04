@@ -1,5 +1,13 @@
 const path = require('path')
 const Sequelize = require('sequelize')
+const Boom = require('boom')
+
+Sequelize.Model.find = async function (...args) {
+  const obj = await this.findById(...args)
+  if (obj === null) throw Boom.notFound()
+
+  return obj
+}
 
 // configure connection to db host, user, pass - not required for SQLite
 const sequelize = new Sequelize(null, null, null, {

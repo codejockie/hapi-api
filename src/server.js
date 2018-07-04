@@ -1,28 +1,22 @@
 
 const Hapi = require('hapi')
 
-const { Article } = require('./models')
+const { configureRoutes } = require('./routes')
 
 const server = Hapi.server({
   host: 'localhost',
   port: 3000
 })
 
-server.route({
-  method: 'GET',
-  path: '/',
-  handler: () => {
-    // return [{ so: 'hapi!' }]
-    // return 123
-    // return `HTML rules!`
-    // return null
-    // return new Error('Boom')
-    // return Promise.resolve({ whoa: true })
-    return require('fs').createReadStream('index.html')
-  }
-})
+// This function will allow us to easily extend it later
+const main = async () => {
+  await configureRoutes(server)
+  await server.start()
 
-server.start().then(() => {
+  return server
+}
+
+main().then(server => {
   console.log('Server running at:', server.info.uri)
 }).catch(err => {
   console.log(err)
