@@ -1,4 +1,5 @@
 const Boom = require('boom')
+const Joi = require('joi')
 
 const { Article, Comment } = require('./models')
 const { login } = require('./auth')
@@ -32,6 +33,16 @@ exports.configureRoutes = (server) => {
       const article = Article.build(request.payload.article)
 
       return article.save()
+    },
+    config: {
+      validate: {
+        payload: {
+          article: {
+            title: Joi.string().min(3).max(10),
+            body: Joi.string().required()
+          }
+        }
+      }
     }
   }, {
     // method can be an array
