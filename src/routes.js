@@ -8,6 +8,13 @@ exports.configureRoutes = (server) => {
   // server.route accepts an object or an array
   return server.route([{
     method: 'GET',
+    path: '/',
+    handler: () => {
+      return require('fs').createReadStream('index.html')
+    },
+    config: { auth: false }
+  }, {
+    method: 'GET',
     path: '/articles',
     handler: () => {
       return Article.findAll()
