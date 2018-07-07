@@ -1,6 +1,7 @@
 
 const Hapi = require('hapi')
 
+const { configureAuth } = require('./auth')
 const { configureRoutes } = require('./routes')
 
 const server = Hapi.server({
@@ -10,6 +11,7 @@ const server = Hapi.server({
 
 // This function will allow us to easily extend it later
 const main = async () => {
+  await configureAuth(server)
   await configureRoutes(server)
   await server.start()
 

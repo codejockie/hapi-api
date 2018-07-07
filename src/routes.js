@@ -9,7 +9,8 @@ exports.configureRoutes = (server) => {
     path: '/articles',
     handler: () => {
       return Article.findAll()
-    }
+    },
+    config: { auth: false }
   }, {
     method: 'GET',
     // The curly braces are how we define params (variable path segments in the URL)
@@ -21,7 +22,8 @@ exports.configureRoutes = (server) => {
       const comments = await article.getComments()
 
       return { ...article.get(), comments }
-    }
+    },
+    config: { auth: false }
   }, {
     method: 'POST',
     path: '/articles',
@@ -55,7 +57,8 @@ exports.configureRoutes = (server) => {
       const article = await Article.find(request.params.id)
   
       return article.createComment(request.payload.comment)
-    }
+    },
+    config: { auth: false }
   }, {
     method: 'DELETE',
     path: '/articles/{articleId}/comments/{id}',
