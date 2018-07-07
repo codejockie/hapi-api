@@ -1,6 +1,7 @@
 const Boom = require('boom')
 
 const { Article, Comment } = require('./models')
+const { login } = require('./auth')
 
 exports.configureRoutes = (server) => {
   // server.route accepts an object or an array
@@ -69,5 +70,14 @@ exports.configureRoutes = (server) => {
   
       return comment.destroy()
     }
+  }, {
+    method: 'POST',
+    path: '/authentications',
+    handler: async (request) => {
+      const { email, password } = request.payload.login
+  
+      return login(email, password)
+    },
+    config: { auth: false }
   }])
 }
